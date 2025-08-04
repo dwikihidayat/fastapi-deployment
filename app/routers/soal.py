@@ -99,18 +99,24 @@ async def submit_jawaban(
         if len(set(soal_ids)) != 44 or min(soal_ids) < 1 or max(soal_ids) > 44:
             raise HTTPException(status_code=400, detail="ID soal tidak valid")
 
-        # Fungsi hitung skor yang diperbaiki
-        def hitung_skor_dimensi(start: int, end: int) -> int:
+        # Fungsi hitung skor dengan mapping yang benar
+        def hitung_skor_dimensi(soal_ids: List[int]) -> int:
             return sum(
                 1 if jawaban_dict.get(soal_id) == 'A' else -1
-                for soal_id in range(start, end + 1)
-            )  # Penambahan tanda kurung penutup yang benar
+                for soal_id in soal_ids
+            )
 
-        # Hitung skor mentah
-        skor_pemrosesan = hitung_skor_dimensi(1, 11)
-        skor_persepsi = hitung_skor_dimensi(12, 22)
-        skor_input = hitung_skor_dimensi(23, 33)
-        skor_pemahaman = hitung_skor_dimensi(34, 44)
+        # Mapping soal sesuai dengan kebutuhan
+        pemrosesan_ids = [1, 5, 9, 13, 17, 21, 25, 29, 33, 37, 41]
+        persepsi_ids = [2, 6, 10, 14, 18, 22, 26, 30, 34, 38, 42]
+        input_ids = [3, 7, 11, 15, 19, 23, 27, 31, 35, 39, 43]
+        pemahaman_ids = [4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44]
+
+        # Hitung skor mentah dengan mapping yang benar
+        skor_pemrosesan = hitung_skor_dimensi(pemrosesan_ids)
+        skor_persepsi = hitung_skor_dimensi(persepsi_ids)
+        skor_input = hitung_skor_dimensi(input_ids)
+        skor_pemahaman = hitung_skor_dimensi(pemahaman_ids)
 
         # Kategorisasi
         kategori_pemrosesan = kategorisasi_pemrosesan(skor_pemrosesan)
